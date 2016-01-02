@@ -1,6 +1,6 @@
 {
   "name": "mysqlstream",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Duplex stream Wrapper on top of node-mysql",
   "main": "mysqlstream.js",
   "scripts": {

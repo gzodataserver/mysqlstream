@@ -22,7 +22,7 @@ DS = function (options, mysqlOptions) {
   Duplex.call(this, options);
 
   this.on('finish', function() {
-    error('finish in writable');
+    debug('finish in writable');
     self.conn.end();
     self.push(null);
   });
@@ -44,7 +44,6 @@ DS.prototype._write = function (sql, enc, next) {
   var query = this.conn.query(sql);
   query
     .on('error', function(err) {
-      error('ERROR in mysqlstream: ', err);
       self.emit('error', JSON.stringify(err));
     })
     .on('fields', function(fields) {
