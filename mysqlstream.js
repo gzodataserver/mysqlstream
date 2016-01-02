@@ -24,6 +24,7 @@ DS = function (options, mysqlOptions) {
   this.on('finish', function() {
     error('finish in writable');
     self.conn.end();
+    self.push(null);
   });
 
   this.readCalled = false;
