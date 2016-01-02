@@ -1,8 +1,8 @@
 {
   "name": "mysqlstream",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Duplex stream Wrapper on top of node-mysql",
-  "main": "index.js",
+  "main": "mysqlstream.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -10,7 +10,7 @@ var Duplex = require('stream').Duplex;
 
 var log = console.log.bind(console);
 var error = console.error.bind(console);
-var debug = function(){}; //console.log.bind(console, 'DEBUG');
+var debug = function(){};
 //var debug = console.log.bind(console, 'DEBUG');
 
 // writable stream
@@ -44,6 +44,7 @@ DS.prototype._write = function (sql, enc, next) {
   query
     .on('error', function(err) {
       error('ERROR in mysqlstream: ', err);
+      self.push(err);
     })
     .on('fields', function(fields) {
     })
