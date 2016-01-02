@@ -44,7 +44,7 @@ DS.prototype._write = function (sql, enc, next) {
   query
     .on('error', function(err) {
       error('ERROR in mysqlstream: ', err);
-      self.push(err);
+      self.push(JSON.stringify(err));
     })
     .on('fields', function(fields) {
     })
