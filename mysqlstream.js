@@ -1,9 +1,10 @@
 // imports
 // =======
 
-var mysql = require('mysql');
 var util = require('util');
+var mysql = require('mysql');
 var Duplex = require('stream').Duplex;
+var crypto = require('crypto');
 
 // logging
 // =======
@@ -31,11 +32,22 @@ DS = function (options, mysqlOptions) {
   this.buffer = [];
 
   mysqlOptions.multipleStatements = true;
+  this.options = options;
   this.mysqlOptions = mysqlOptions;
   this.conn = mysql.createConnection(mysqlOptions);
   this.conn.connect();
 };
 util.inherits(DS, Duplex);
+
+// calculate the MD5 etag for a JSON object, for instance using alg=md5 and deigest=hex
+DS.prototype._etag = function(obj) {
+  if(!this.options || !this.options.etagAlg || !this.options.etagDigest) return;
+  
+  var md5 = crypto.createHash(this.options.etagAlg);
+  for (var key in obj) md5.update('' + obj[key]);
+  obj['@odata,etag'] =  md5.digest(this.options.etagDigest);
+};
+
 
 DS.prototype._write = function (sql, enc, next) {
   var self = this;
@@ -49,6 +61,7 @@ DS.prototype._write = function (sql, enc, next) {
     .on('fields', function(fields) {
     })
     .on('result', function(row) {
+      self._etag(row);
       self.buffer.push(row);
     })
     .on('end', function() {

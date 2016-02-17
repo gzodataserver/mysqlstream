@@ -11,17 +11,22 @@ var debug = function () {}; //console.log.bind(console, 'DEBUG');
 // test
 // ========
 
-var options = {
+var mysqlOptions = {
   host: 'localhost',
   user: process.env.ADMIN_USER,
   password: process.env.ADMIN_PASSWORD,
   //  database : process.env.ADMIN_USER,
 };
 
+var options = {
+  etagAlg: 'md5',
+  etagDigest: 'hex'
+};
+
 var ds;
 function setup(err) {
   if (err) console.log('ERRORRR', err);
-  ds = new MysqlStream(null, options);
+  ds = new MysqlStream(options, options);
   ds.on('error', setup);
   process.stdin.pipe(ds).pipe(process.stdout);
 }
