@@ -24,14 +24,16 @@ var options = {
 };
 
 var ds;
-function setup(err) {
+function setup(err, etag) {
   if (err) console.log('ERRORRR', err);
-  ds = new MysqlStream(options, options);
+  if (etag) ds = new MysqlStream(options, options);
+  else ds = new MysqlStream(null, options);
   ds.on('error', setup);
   process.stdin.pipe(ds).pipe(process.stdout);
 }
 
-setup();
+// change to false, true to test etags
+setup(false, false);
 
 log('Copy and paste this: select 1+1 as sol1; select 2+2 as sol2; select 3+3 as sol3; select 4+4 as sol4;');
 log('Test error handling: create table test(conter int)');

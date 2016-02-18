@@ -41,11 +41,12 @@ util.inherits(DS, Duplex);
 
 // calculate the MD5 etag for a JSON object, for instance using alg=md5 and deigest=hex
 DS.prototype._etag = function(obj) {
-  if(!this.options || !this.options.etagAlg || !this.options.etagDigest) return;
+  if(!this.options || !this.options.etagAlg || !this.options.etagDigest) 
+    return false;
   
   var md5 = crypto.createHash(this.options.etagAlg);
   for (var key in obj) md5.update('' + obj[key]);
-  obj['@odata,etag'] =  md5.digest(this.options.etagDigest);
+  return md5.digest(this.options.etagDigest);
 };
 
 
@@ -61,8 +62,9 @@ DS.prototype._write = function (sql, enc, next) {
     .on('fields', function(fields) {
     })
     .on('result', function(row) {
-      self._etag(row);
-      self.buffer.push(row);
+      var etag = self._etag(row);
+      if (etag) self.buffer.push({'@odata.etag': etag});
+      else self.buffer.push(row);
     })
     .on('end', function() {
       self._pushData();
