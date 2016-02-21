@@ -49,7 +49,7 @@ DS.prototype._etag = function (obj) {
 
   // now only save the properties specified in etagCols
   var obj2 = {};
-  obj2['odata.etag'] = md5.digest(this.options.etagDigest);
+  obj2['@odata.etag'] = md5.digest(this.options.etagDigest);
   this.options.etagCols.forEach(function (key) {
     obj2[key] = obj[key];
   });
